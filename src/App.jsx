@@ -60,6 +60,7 @@ export default function App() {
     return (
       <div className="app">
         {/* NAVBNAR */}
+       <NavBar />
        
         {/* HERO */}
             <section className="hero bg-hero">
