@@ -30,7 +30,6 @@
 
 /* --- YOUR IMPORTS GO HERE --- */
 
-
 // STEP 2: Create and export the NavBar component
 // export default function NavBar() { ... }
 //
@@ -93,23 +92,13 @@ export default function NavBar() {
     // function to update the state
     // default position or value
     const [scrolled, setScrolled] = useState(false);
-    
 
     const closeMenu = () => setMenuOpen(false);
-    
-    useEffect( () => {
-        const handleScroll = () => setScrolled(window.scrollY > 20 );
-        window.addEventListener("scroll", handleScroll, { passive:true} );
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [])
-    
-    
-    return();
-}
     }, []);
 
     return (
