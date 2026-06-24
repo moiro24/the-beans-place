@@ -143,6 +143,7 @@ const navigation = {
 
 const currentYear = new Date().getFullYear();
 
+/* -- Leaflet map component */
 /* ── Leaflet map component ── */
 function LocationMap() {
     const mapRef = useRef(null);
@@ -288,4 +289,3 @@ export default function FooterSection() {
         </footer>
     );
 }
- 

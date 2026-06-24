@@ -53,10 +53,14 @@
 // for the navigation links in the NavBar.
 
 /* --- YOUR COMPONENT CODE GOES HERE --- */
-import ContactSection from "./components/ContactSection";
-import FooterSection from "./components/FooterSection";
 import HeroSection from "./components/HeroSection";
 import NavBar from "./components/NavBar";
+import FooterSection from "./components/FooterSection";
+import ContactSection from "./components/ContactSection";
+{/*import ContactForm from "./components/ContactForm";*/}
+import RibbonTicker from "./components/RibbonTicker";
+import { Ribbon } from "lucide-react";
+import ProductShowcase from "./components/ProductShowcase";
 
 export default function App() {
     return (
@@ -71,10 +75,14 @@ export default function App() {
                 </div>
             </section>
 
+            <RibbonTicker />
+
             {/* FEATURES / CAROUSEL */}
 
             {/* PRODUCT SHOWCASE */}
-
+            <section className="bg-cta">
+                <ProductShowcase />
+            </section>
             {/* CTA */}
 
             {/* ABOUT */}
@@ -82,7 +90,9 @@ export default function App() {
             {/* CONTACT */}
             <section className="bg-cta" id="contact">
                 <ContactSection />
+                {/* <ContactForm /> */}
             </section>
+
             {/* FOOTER */}
             <section className="bg-footer">
                 <FooterSection />
@@ -90,3 +100,4 @@ export default function App() {
         </div>
     );
 }
+ 
