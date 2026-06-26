@@ -53,63 +53,115 @@
 // for the navigation links in the NavBar.
 
 /* --- YOUR COMPONENT CODE GOES HERE --- */
+import { useEffect, useState } from "react";
 import HeroSection from "./components/HeroSection";
 import NavBar from "./components/NavBar";
 import FooterSection from "./components/FooterSection";
 import ContactSection from "./components/ContactSection";
-import ContactForm from "./components/ContactForm";
 import RibbonTicker from "./components/RibbonTicker";
-import { Ribbon } from "lucide-react";
 import ProductShowcase from "./components/ProductShowcase";
 import FeaturesSection from "./components/FeaturesSection";
 import CtaSection from "./components/CtaSection";
 import AboutSection from "./components/AboutSection";
+import OrderPage from "./components/OrderPage";
+import SubscriptionPage from "./components/SubscriptionPage";
 
 export default function App() {
-    return (
-        <div className="app">
-            {/* NAVBAR */}
-            <NavBar />
+  const [showOrderPage, setShowOrderPage] = useState(false);
+  const [showSubscriptionPage, setShowSubscriptionPage] = useState(false);
+  const [selectedCoffeeId, setSelectedCoffeeId] = useState(null);
 
-            {/* HERO */}
-            <section className="hero bg-hero">
-                <div className="hero-grid">
-                    <HeroSection />
-                </div>
-            </section>
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [showOrderPage, showSubscriptionPage]);
 
-            <RibbonTicker />
+  return (
+    <div className="app">
+      {showOrderPage ? (
+        <OrderPage
+          selectedCoffeeId={selectedCoffeeId}
+          onBack={() => {
+            setShowOrderPage(false);
+            setSelectedCoffeeId(null);
+          }}
+          onOpenSubscriptions={() => {
+            setShowOrderPage(false);
+            setShowSubscriptionPage(true);
+          }}
+        />
+      ) : showSubscriptionPage ? (
+        <SubscriptionPage
+          onBackHome={() => {
+            setShowSubscriptionPage(false);
+            setSelectedCoffeeId(null);
+          }}
+          onOpenOrder={() => {
+            setShowSubscriptionPage(false);
+            setSelectedCoffeeId(null);
+            setShowOrderPage(true);
+          }}
+        />
+      ) : (
+        <>
+          {/* NAVBAR */}
+          <NavBar
+            onOrderClick={() => {
+              setSelectedCoffeeId(null);
+              setShowOrderPage(true);
+            }}
+          />
 
-            {/* FEATURES / CAROUSEL */}
-            <section className="features bg-features" id="shop">
-                <FeaturesSection />
-            </section>
+          {/* HERO */}
+          <section className="hero bg-hero">
+            <div className="hero-grid">
+              <HeroSection />
+            </div>
+          </section>
 
-            {/* PRODUCT SHOWCASE */}
-            <section className="bg-cta">
-                <ProductShowcase />
-            </section>
+          <RibbonTicker />
 
-            {/* CTA */}
-            <section className="bg-cta">
-                <CtaSection />
-            </section>
+          {/* FEATURES / CAROUSEL */}
+          <section className="features bg-features" id="shop">
+            <FeaturesSection />
+          </section>
 
-            {/* ABOUT */}
-            <section className="bg-cta" id="about">
-                <AboutSection />
-            </section>
+          {/* PRODUCT SHOWCASE */}
+          <section className="bg-cta">
+            <ProductShowcase
+              onOrderClick={(coffeeId) => {
+                setSelectedCoffeeId(coffeeId);
+                setShowOrderPage(true);
+              }}
+            />
+          </section>
 
-            {/* CONTACT */}
-            <section className="bg-cta" id="contact">
-                <ContactSection />
-                {/* <ContactForm /> */}
-            </section>
+          <RibbonTicker />
 
-            {/* FOOTER */}
-            <section className="bg-footer">
-                <FooterSection />
-            </section>
-        </div>
-    );
+          {/* CTA */}
+          <section className="bg-cta">
+            <CtaSection />
+          </section>
+
+          {/* ABOUT */}
+          <section className="bg-cta" id="about">
+            <AboutSection />
+          </section>
+
+          {/* CONTACT */}
+          <section className="bg-cta" id="contact">
+            <ContactSection />
+          </section>
+
+          {/* FOOTER */}
+          <section className="bg-footer">
+            <FooterSection
+              onSubscriptionClick={() => {
+                setShowSubscriptionPage(true);
+              }}
+            />
+          </section>
+        </>
+      )}
+    </div>
+  );
 }
