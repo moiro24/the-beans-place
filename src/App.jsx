@@ -65,40 +65,128 @@ import CtaSection from "./components/CtaSection";
 import AboutSection from "./components/AboutSection";
 import OrderPage from "./components/OrderPage";
 import SubscriptionPage from "./components/SubscriptionPage";
+import CoffeeCatalogPage from "./components/CoffeeCatalogPage";
+import CareersPage from "./components/CareersPage";
+import CareerApplicationPage from "./components/CareerApplicationPage";
+
+function getNormalizedPath(pathname) {
+  const path = pathname.split("?")[0].split("#")[0];
+  return path.replace(/\/+$/, "") || "/";
+}
+
+function getViewFromPath(pathname) {
+  const path = getNormalizedPath(pathname);
+
+  if (path === "/order") return "order";
+  if (path === "/subscriptions") return "subscription";
+  if (path === "/catalog") return "catalog";
+  if (path === "/careers") return "careers";
+  if (path === "/careers/apply") return "career-application";
+  if (path === "/home" || path === "/index.html" || path === "") return "home";
+
+  return "home";
+}
+
+function getPathFromView(view) {
+  switch (view) {
+    case "order":
+      return "/order";
+    case "subscription":
+      return "/subscriptions";
+    case "catalog":
+      return "/catalog";
+    case "careers":
+      return "/careers";
+    case "career-application":
+      return "/careers/apply";
+    default:
+      return "/";
+  }
+}
 
 export default function App() {
-  const [showOrderPage, setShowOrderPage] = useState(false);
-  const [showSubscriptionPage, setShowSubscriptionPage] = useState(false);
+  const [currentView, setCurrentView] = useState(() => getViewFromPath(window.location.pathname));
   const [selectedCoffeeId, setSelectedCoffeeId] = useState(null);
+
+  const navigateTo = (view) => {
+    const nextPath = getPathFromView(view);
+    setCurrentView(view);
+    window.history.pushState({ view }, "", nextPath);
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentView(getViewFromPath(window.location.pathname));
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [showOrderPage, showSubscriptionPage]);
+  }, [currentView]);
+
+  useEffect(() => {
+    if (currentView === "home" && window.location.pathname !== "/") {
+      window.history.replaceState({ view: "home" }, "", "/");
+    }
+  }, [currentView]);
 
   return (
     <div className="app">
-      {showOrderPage ? (
+      {currentView === "order" ? (
         <OrderPage
           selectedCoffeeId={selectedCoffeeId}
           onBack={() => {
-            setShowOrderPage(false);
             setSelectedCoffeeId(null);
+            navigateTo("home");
           }}
           onOpenSubscriptions={() => {
-            setShowOrderPage(false);
-            setShowSubscriptionPage(true);
+            setSelectedCoffeeId(null);
+            navigateTo("subscription");
           }}
         />
-      ) : showSubscriptionPage ? (
+      ) : currentView === "subscription" ? (
         <SubscriptionPage
           onBackHome={() => {
-            setShowSubscriptionPage(false);
             setSelectedCoffeeId(null);
+            navigateTo("home");
           }}
           onOpenOrder={() => {
-            setShowSubscriptionPage(false);
             setSelectedCoffeeId(null);
-            setShowOrderPage(true);
+            navigateTo("order");
+          }}
+        />
+      ) : currentView === "catalog" ? (
+        <CoffeeCatalogPage
+          onBackHome={() => {
+            setSelectedCoffeeId(null);
+            navigateTo("home");
+          }}
+          onOpenOrder={() => {
+            setSelectedCoffeeId(null);
+            navigateTo("order");
+          }}
+        />
+      ) : currentView === "careers" ? (
+        <CareersPage
+          onBackHome={() => {
+            setSelectedCoffeeId(null);
+            navigateTo("home");
+          }}
+          onOpenApplication={() => {
+            navigateTo("career-application");
+          }}
+        />
+      ) : currentView === "career-application" ? (
+        <CareerApplicationPage
+          onBackToCareers={() => {
+            navigateTo("careers");
+          }}
+          onBackHome={() => {
+            setSelectedCoffeeId(null);
+            navigateTo("home");
           }}
         />
       ) : (
@@ -107,7 +195,7 @@ export default function App() {
           <NavBar
             onOrderClick={() => {
               setSelectedCoffeeId(null);
-              setShowOrderPage(true);
+              navigateTo("order");
             }}
           />
 
@@ -130,7 +218,10 @@ export default function App() {
             <ProductShowcase
               onOrderClick={(coffeeId) => {
                 setSelectedCoffeeId(coffeeId);
-                setShowOrderPage(true);
+                navigateTo("order");
+              }}
+              onViewAllClick={() => {
+                navigateTo("catalog");
               }}
             />
           </section>
@@ -156,7 +247,13 @@ export default function App() {
           <section className="bg-footer">
             <FooterSection
               onSubscriptionClick={() => {
-                setShowSubscriptionPage(true);
+                navigateTo("subscription");
+              }}
+              onCoffeeCatalogClick={() => {
+                navigateTo("catalog");
+              }}
+              onCareersClick={() => {
+                navigateTo("careers");
               }}
             />
           </section>

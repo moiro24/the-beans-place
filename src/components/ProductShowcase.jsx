@@ -169,7 +169,7 @@ const products = [
   }
 ];
 
-export default function ProductShowcase({ onOrderClick }) {
+export default function ProductShowcase({ onOrderClick, onViewAllClick }) {
   return (
     <div className="product-showcase">
       <ScrollReveal animation="fadeUp">
@@ -240,7 +240,7 @@ export default function ProductShowcase({ onOrderClick }) {
 
       <ScrollReveal animation="fadeUp" delay={0.2}>
         <div className="product-showcase-cta">
-          <Button variant="accent" size="lg">
+          <Button variant="accent" size="lg" onClick={onViewAllClick}>
             View All Coffee →
           </Button>
         </div>

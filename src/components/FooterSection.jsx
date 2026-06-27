@@ -210,7 +210,11 @@ function LocationMap() {
   return <div ref={mapRef} className="footer-map" style={{ width: "100%", overflow: "hidden" }} />;
 }
 
-export default function FooterSection({ onSubscriptionClick }) {
+export default function FooterSection({
+  onSubscriptionClick,
+  onCoffeeCatalogClick,
+  onCareersClick
+}) {
   return (
     <footer className="footer">
       <div className="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-32 2xl:max-w-400">
@@ -256,6 +260,13 @@ export default function FooterSection({ onSubscriptionClick }) {
                       className="text-left font-medium text-white/70 transition-colors duration-200 hover:text-(--cream)">
                       {item.name}
                     </button>
+                  ) : item.name === "All Coffee" ? (
+                    <button
+                      type="button"
+                      onClick={onCoffeeCatalogClick}
+                      className="text-left font-medium text-white/70 transition-colors duration-200 hover:text-(--cream)">
+                      {item.name}
+                    </button>
                   ) : (
                     <a href={item.href}>{item.name}</a>
                   )}
@@ -269,7 +280,16 @@ export default function FooterSection({ onSubscriptionClick }) {
             <ul role="list" className="footer-links mt-4">
               {navigation.company.map((item) => (
                 <li key={item.name}>
-                  <a href={item.href}>{item.name}</a>
+                  {item.name === "Careers" ? (
+                    <button
+                      type="button"
+                      onClick={onCareersClick}
+                      className="text-left font-medium text-white/70 transition-colors duration-200 hover:text-(--cream)">
+                      {item.name}
+                    </button>
+                  ) : (
+                    <a href={item.href}>{item.name}</a>
+                  )}
                 </li>
               ))}
             </ul>
